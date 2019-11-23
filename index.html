@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>Windowing</title>
 </head>
 <body>
     <style>
@@ -17,6 +17,7 @@
         }
         #scroller {
             border: 1px solid blue;
+            /* there will be 100 elements of 20px height */
             height: 2000px;
         }
     </style>
@@ -28,25 +29,32 @@
     </div>
 
     <script>
+        // create 100 element data
+        // each element will be rendered with 20px height
         const _arr = Array(100).fill(0)
         const arr = _arr.map((_, indx) => {
             return indx
         })
+
         const scroller = document.querySelector('#scroller')
         const container = document.querySelector('#container')
         container.addEventListener('scroll', (e) => {
             const divs = arr.map((val, indx) => {
+                // ignore creating DOM if the element is out of view
                 if (val * 20 < e.currentTarget.scrollTop || val * 20 > e.currentTarget.scrollTop + e.currentTarget.clientHeight) {
                     return
                 }
+                // create DOM for the element in the view
                 const div = document.createElement('div')
                 div.textContent = val
-                div.style.height = '20px'
+                div.style.height = '20px' // each element has 20px height
                 div.style.position = 'absolute'
                 div.style.top = `${(val * 20)}px`
                 return div
             })
+            // remove all current DOMs
             scroller.querySelectorAll('*').forEach(n => n.remove())
+            // add necessary DOMs which are in the view
             divs.forEach((div) => {
                 if (div) {
                     scroller.appendChild(div)
